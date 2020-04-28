@@ -64,10 +64,7 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-  const arr = value.split(' ');
-  const firstValue = arr[1];
-  const secondValue = arr.pop().slice(0, -1);
-  return `${firstValue} ${secondValue}`;
+  return value.slice(7, -1);
 }
 
 /**
@@ -81,7 +78,7 @@ function extractNameFromTemplate(value) {
  *   'cat'       => 'c'
  */
 function getFirstChar(value) {
-  return value.charAt(0);
+  return value[0];
 }
 
 /**
@@ -111,11 +108,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   'cat', 3 => 'catcatcat'
  */
 function repeatString(value, count) {
-  let result = '';
-  for (let i = 0; i < count; i += 1) {
-    result += value;
-  }
-  return result;
+  return value.repeat(count);
 }
 
 /**
@@ -131,8 +124,7 @@ function repeatString(value, count) {
  *   'ABABAB','BA' => 'ABAB'
  */
 function removeFirstOccurrences(str, value) {
-  const result = str.replace(value, '');
-  return result;
+  return str.replace(value, '');
 }
 
 /**
@@ -147,9 +139,7 @@ function removeFirstOccurrences(str, value) {
  *   '<a>' => 'a'
  */
 function unbracketTag(str) {
-  let strt = str.replace('<', '');
-  strt = strt.replace('>', '');
-  return strt;
+  return str.replace(/[<>]/gi, '');
 }
 
 /**
@@ -208,8 +198,47 @@ function extractEmails(str) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  let str = '';
+  for (let i = 0; i < height; i += 1) {
+    for (let j = 0; j < width; j += 1) {
+      if (i === 0) {
+        switch (j) {
+          case 0:
+            str += '┌';
+            break;
+          case width - 1:
+            str += '┐\n';
+            break;
+          default:
+            str += '─';
+        }
+      } else if (i === height - 1) {
+        switch (j) {
+          case 0:
+            str += '└';
+            break;
+          case width - 1:
+            str += '┘\n';
+            break;
+          default:
+            str += '─';
+        }
+      } else {
+        switch (j) {
+          case 0:
+            str += '│';
+            break;
+          case width - 1:
+            str += '│\n';
+            break;
+          default:
+            str += ' ';
+        }
+      }
+    }
+  }
+  return str;
 }
 
 /**
@@ -229,21 +258,16 @@ function getRectangleString(/* width, height */) {
  *
  */
 function encodeToRot13(str) {
-  const inp = str.split('');
-  const res = [];
-  const input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const output = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-
-  const inputArr = input.split('');
-  const outputArr = output.split('');
-  for (let i = 0; i < inp.length; i += 1) {
-    if (inputArr.indexOf(inp[i]) === -1) {
-      res.push(inp[i]);
-    } else {
-      res.push(outputArr[inputArr.indexOf(inp[i])]);
-    }
+  const lookUpTable = [
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+    'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm',
+  ];
+  let s = '';
+  for (let i = 0; i < str.length; i += 1) {
+    const index = lookUpTable[0].indexOf(str[i]);
+    s += index === -1 ? str[i] : lookUpTable[1][index];
   }
-  return res.join('');
+  return s;
 }
 
 /**
@@ -259,8 +283,9 @@ function encodeToRot13(str) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  if (value === undefined || value === null) return false;
+  return value.length > 0;
 }
 
 /**
@@ -287,8 +312,62 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const lookUp = [
+    'A♣',
+    '2♣',
+    '3♣',
+    '4♣',
+    '5♣',
+    '6♣',
+    '7♣',
+    '8♣',
+    '9♣',
+    '10♣',
+    'J♣',
+    'Q♣',
+    'K♣',
+    'A♦',
+    '2♦',
+    '3♦',
+    '4♦',
+    '5♦',
+    '6♦',
+    '7♦',
+    '8♦',
+    '9♦',
+    '10♦',
+    'J♦',
+    'Q♦',
+    'K♦',
+    'A♥',
+    '2♥',
+    '3♥',
+    '4♥',
+    '5♥',
+    '6♥',
+    '7♥',
+    '8♥',
+    '9♥',
+    '10♥',
+    'J♥',
+    'Q♥',
+    'K♥',
+    'A♠',
+    '2♠',
+    '3♠',
+    '4♠',
+    '5♠',
+    '6♠',
+    '7♠',
+    '8♠',
+    '9♠',
+    '10♠',
+    'J♠',
+    'Q♠',
+    'K♠',
+  ];
+  return lookUp.indexOf(value);
 }
 
 module.exports = {
